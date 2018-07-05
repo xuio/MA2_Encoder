@@ -1,10 +1,7 @@
-/* Encoder Library - TwoKnobs Example
- * http://www.pjrc.com/teensy/td_libs_Encoder.html
- *
- * This example code is in the public domain.
- */
+// MIDI Channel
+const uint8_t channel = 10;
 
-// MIDI Notes
+// MIDI Notes to send
 // [encoder id][direction ([0]: -; [1]: +)]
 const uint8_t midi_map[4][2] = {{1, 2}, {3, 4}, {5, 6}, {7, 8}};
 
@@ -13,7 +10,6 @@ const uint8_t midi_map[4][2] = {{1, 2}, {3, 4}, {5, 6}, {7, 8}};
 long pos[4] = {-999};
 
 Encoder knob[4] = {{11, 9}, {2, 12}, {8, 7}, {21, 20}};
-//   avoid using pins with LEDs attached
 
 void setup() {
 }
@@ -30,14 +26,14 @@ void loop() {
     for(int i=0; i<4; i++)
       if(new_val[i] != pos[i]){
         if(new_val[i] > pos[i])
-          usbMIDI.sendNoteOn(midi_map[i][0], 127, 10);
+          usbMIDI.sendNoteOn(midi_map[i][0], 127, channel);
         else
-          usbMIDI.sendNoteOn(midi_map[i][1], 127, 10);
+          usbMIDI.sendNoteOn(midi_map[i][1], 127, channel);
         
         pos[i] = new_val[i];
       }
     old_millis = millis();
   }
 
-  while (usbMIDI.read()){}
+  while(usbMIDI.read()){}
 }
